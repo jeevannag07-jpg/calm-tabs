@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TabZen AI</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background: radial-gradient(circle at top left,#151932 0%,#090b15 40%,#05060d 100%);
+    color:white;
+    padding:40px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.title{
+    font-size:58px;
+    margin-bottom:10px;
+    background:linear-gradient(to right,#8b5cf6,#00e5ff);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+    color:#9aa4c7;
+    margin-bottom:40px;
+}
+
+.card{
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    backdrop-filter:blur(20px);
+    border-radius:30px;
+    padding:30px;
+    margin-bottom:30px;
+}
+
+textarea{
+    width:100%;
+    height:180px;
+    background:rgba(255,255,255,0.03);
+    border:none;
+    outline:none;
+    color:white;
+    padding:20px;
+    border-radius:20px;
+    font-size:15px;
+    margin-top:20px;
+}
+
+button{
+    margin-top:20px;
+    padding:16px 28px;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(135deg,#8b5cf6,#00e5ff);
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.analytics{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.box{
+    background:rgba(255,255,255,0.05);
+    border-radius:24px;
+    padding:24px;
+}
+
+.box h2{
+    font-size:36px;
+    margin-top:10px;
+}
+
+.box p{
+    color:#9aa4c7;
+}
+
+.tabs{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.tab{
+    background:rgba(255,255,255,0.05);
+    border-radius:24px;
+    padding:22px;
+}
+
+.badge{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:40px;
+    font-size:12px;
+    margin-top:16px;
+}
+
+.keep{ background:rgba(0,255,170,0.15); color:#00ffb3; }
+.save{ background:rgba(255,200,0,0.15); color:#ffd54a; }
+.close{ background:rgba(255,0,80,0.15); color:#ff5b8f; }
+
+.loading{
+    margin-top:20px;
+    color:#00e5ff;
+}
+
+@media(max-width:900px){
+    .analytics{ grid-template-columns:1fr; }
+    .tabs{ grid-template-columns:1fr; }
+    .title{ font-size:42px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 class="title">Reduce Browser Chaos with AI</h1>
+<p class="subtitle">Organize tabs, reduce overload, and regain focus.</p>
+
+<div class="card">
+<h2>Paste Browser URLs</h2>
+
+<textarea id="urlInput" placeholder="https://github.com
+https://youtube.com
+https://openai.com"></textarea>
+
+<button id="analyzeBtn">✦ Analyze with AI</button>
+
+<div class="loading" id="loading"></div>
+</div>
+
+<div class="analytics">
+<div class="box"><p>Total Tabs</p><h2 id="totalTabs">0</h2></div>
+<div class="box"><p>Dead Tabs</p><h2 id="deadTabs">0</h2></div>
+<div class="box"><p>Focus Score</p><h2 id="focusScore">0%</h2></div>
+<div class="box"><p>Learning Tabs</p><h2 id="learningTabs">0</h2></div>
+</div>
+
+<div class="tabs" id="tabsContainer"></div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+const analyzeBtn = document.getElementById('analyzeBtn');
+const loading = document.getElementById('loading');
+const tabsContainer = document.getElementById('tabsContainer');
+
+if (!analyzeBtn || !loading || !tabsContainer) {
+    console.error("Missing HTML elements");
+    return;
+}
+
+analyzeBtn.addEventListener('click', analyzeTabs);
+
+async function analyzeTabs() {
+
+    const input = document.getElementById('urlInput').value.trim();
+
+    if (!input) {
+        alert('Paste URLs first');
+        return;
+    }
+
+    // ✅ FIXED MULTI-LINE SPLIT
+    const urls = input
+        .split(/\r?\n/)
+        .map(u => u.trim())
+        .filter(Boolean);
+
+    loading.textContent = 'AI analyzing browser tabs...';
+    analyzeBtn.disabled = true;
+
+    try {
+        const response = await fetch('/api/analyze-tabs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tabs: urls })
+        });
+
+        const data = await response.json();
+
+        renderTabs(data);
+        updateAnalytics(data);
+
+        loading.textContent = 'Analysis completed';
+
+    } catch (error) {
+        console.log(error);
+        loading.textContent = 'Backend connection failed';
+    } finally {
+        analyzeBtn.disabled = false;
+    }
+}
+
+function renderTabs(data) {
+
+    tabsContainer.innerHTML = '';
+
+    data.forEach(tab => {
+
+        let badgeClass = 'save';
+        let badgeText = 'Save';
+
+        if (tab.status === 'useful') {
+            badgeClass = 'keep';
+            badgeText = 'Keep';
+        }
+
+        if (tab.status === 'likely-dead' || tab.status === 'login-page') {
+            badgeClass = 'close';
+            badgeText = 'Close';
+        }
+
+        const card = document.createElement('div');
+        card.className = 'tab';
+
+        card.innerHTML = `
+            <h3>${tab.title || 'No title'}</h3>
+            <p style="color:#9aa4c7;margin-top:10px;">
+                ${tab.summary || ''}
+            </p>
+
+            <div class="badge ${badgeClass}">
+                ${badgeText}
+            </div>
+
+            <p style="margin-top:18px;color:#00e5ff;">
+                ${tab.category || ''}
+            </p>
+
+            <p style="margin-top:10px;font-size:12px;color:#999;word-break:break-all;">
+                ${tab.url || ''}
+            </p>
+        `;
+
+        tabsContainer.appendChild(card);
+    });
+}
+
+function updateAnalytics(data) {
+
+    const total = data.length || 0;
+
+    const dead = data.filter(tab =>
+        tab.status === 'likely-dead' || tab.status === 'login-page'
+    ).length;
+
+    const useful = data.filter(tab =>
+        tab.status === 'useful'
+    ).length;
+
+    const learning = data.filter(tab =>
+        tab.category === 'Learning' || tab.category === 'Research'
+    ).length;
+
+    const focus = total > 0 ? Math.floor((useful / total) * 100) : 0;
+
+    document.getElementById('totalTabs').textContent = total;
+    document.getElementById('deadTabs').textContent = dead;
+    document.getElementById('focusScore').textContent = focus + '%';
+    document.getElementById('learningTabs').textContent = learning;
+}
+
+});
+</script>
+
+</body>
+</html>
