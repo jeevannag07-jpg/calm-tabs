@@ -1,0 +1,17 @@
+name: 24/7 Keep-Alive Uptime Ping
+
+on:
+  schedule:
+    # Runs every 5 minutes 24/7
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Deployed JurisShift Services
+        run: |
+          echo "Sending 24/7 keep-alive ping to JurisShift services..."
+          # Replace with your deployed Render / Vercel domain URL when live
+          curl -s --head --request GET "https://github.com/jeevannag07-jpg/calm-tabs" || true
