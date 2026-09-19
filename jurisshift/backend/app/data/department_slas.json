@@ -1,0 +1,83 @@
+{
+  "ULB-MCC-01": {
+    "Roads & Infrastructure": {
+      "department": "MCC PWD Infrastructure Division",
+      "sla_hours": 48,
+      "officer_email": "pwd-chief@mysorecity.gov.in"
+    },
+    "Sanitation & Waste Management": {
+      "department": "MCC Health & Solid Waste Division",
+      "sla_hours": 24,
+      "officer_email": "health-officer@mysorecity.gov.in"
+    },
+    "Electrical & Streetlighting": {
+      "department": "MCC Electrical Engineering Cell",
+      "sla_hours": 12,
+      "officer_email": "electrical@mysorecity.gov.in"
+    },
+    "Water Supply & Drainage": {
+      "department": "MCC Vani Vilas Water Works (VVWW)",
+      "sla_hours": 6,
+      "officer_email": "vvww-ee@mysorecity.gov.in"
+    },
+    "General Public Health": {
+      "department": "MCC Public Administration Cell",
+      "sla_hours": 36,
+      "officer_email": "grievance@mysorecity.gov.in"
+    }
+  },
+  "ULB-HTC-02": {
+    "Roads & Infrastructure": {
+      "department": "Hootagalli Engineering Cell",
+      "sla_hours": 72,
+      "officer_email": "engg@hootagallicmc.in"
+    },
+    "Sanitation & Waste Management": {
+      "department": "Hootagalli Health & Sanitation Dept",
+      "sla_hours": 36,
+      "officer_email": "sanitation@hootagallicmc.in"
+    },
+    "Electrical & Streetlighting": {
+      "department": "Hootagalli Power Maintenance",
+      "sla_hours": 24,
+      "officer_email": "lighting@hootagallicmc.in"
+    },
+    "Water Supply & Drainage": {
+      "department": "Hootagalli Water Board",
+      "sla_hours": 12,
+      "officer_email": "water@hootagallicmc.in"
+    },
+    "General Public Health": {
+      "department": "Hootagalli Revenue & Administration",
+      "sla_hours": 48,
+      "officer_email": "admin@hootagallicmc.in"
+    }
+  },
+  "ULB-BGD-03": {
+    "Roads & Infrastructure": {
+      "department": "Bogadi TP Public Works",
+      "sla_hours": 96,
+      "officer_email": "pwd@bogaditp.in"
+    },
+    "Sanitation & Waste Management": {
+      "department": "Bogadi TP Waste & Environment",
+      "sla_hours": 48,
+      "officer_email": "cleanliness@bogaditp.in"
+    },
+    "Electrical & Streetlighting": {
+      "department": "Bogadi TP Electrical Division",
+      "sla_hours": 48,
+      "officer_email": "lighting@bogaditp.in"
+    },
+    "Water Supply & Drainage": {
+      "department": "Bogadi TP Water Supply Wing",
+      "sla_hours": 24,
+      "officer_email": "water@bogaditp.in"
+    },
+    "General Public Health": {
+      "department": "Bogadi TP Citizen Support",
+      "sla_hours": 72,
+      "officer_email": "support@bogaditp.in"
+    }
+  }
+}
